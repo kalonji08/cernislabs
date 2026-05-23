@@ -6,6 +6,7 @@ import Services from '@/components/Services'
 import WhyUs from '@/components/WhyUs'
 import Process from '@/components/Process'
 import Sectors from '@/components/Sectors'
+import ContactForm from '@/components/ContactForm'
 import Footer from '@/components/Footer'
 import ScrollProgress from '@/components/ScrollProgress'
 
@@ -21,6 +22,7 @@ export default function Home() {
       <WhyUs />
       <Process />
       <Sectors />
+      <ContactForm />
       <Footer />
     </main>
   )
