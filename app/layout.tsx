@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/og-image.png',
+        url: '/opengraph-image',
         width: 1200,
         height: 630,
         alt: 'Cernislabs — AI & Software Consulting, Johannesburg',
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     title: 'Cernislabs | AI & Software Consulting — Johannesburg',
     description:
       'Fixed-fee AI and software projects for South African businesses. Senior partners. Results within 90 days.',
-    images: ['/og-image.png'],
+    images: ['/opengraph-image'],
   },
   robots: {
     index: true,
@@ -87,7 +87,7 @@ const jsonLd = {
   '@type': 'ProfessionalService',
   name: 'Cernislabs',
   url: BASE_URL,
-  logo: `${BASE_URL}/og-image.png`,
+  logo: `${BASE_URL}/opengraph-image`,
   email: 'hello@cernislabs.com',
   description:
     'Johannesburg-based AI consulting, data engineering, full-stack development and digital marketing for South African businesses.',
