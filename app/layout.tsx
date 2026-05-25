@@ -28,11 +28,11 @@ const BASE_URL = 'https://www.cernislabs.com'
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'Cernislabs | AI & Software Consulting — Johannesburg, South Africa',
-    template: '%s | Cernislabs',
+    default: 'AI Consulting Johannesburg | CernisLabs — Software, Data & Growth',
+    template: '%s | CernisLabs',
   },
   description:
-    'Johannesburg-based AI consulting, data engineering, full-stack development and digital marketing. Fixed-fee projects. Senior partners. Results within 90 days.',
+    'Top-rated AI consulting firm in Johannesburg. CernisLabs delivers cost reduction, data engineering, full-stack development and digital marketing for South African businesses. Fixed-fee. Senior partners. Results within 90 days.',
   keywords: [
     'AI consulting Johannesburg',
     'AI consulting South Africa',
@@ -49,11 +49,11 @@ export const metadata: Metadata = {
     canonical: BASE_URL,
   },
   openGraph: {
-    title: 'Cernislabs | AI & Software Consulting — Johannesburg, South Africa',
+    title: 'AI Consulting Johannesburg | CernisLabs — Software, Data & Growth',
     description:
       'Fixed-fee AI consulting, data engineering, and software development for South African businesses. Johannesburg-based senior partners. Results within 90 days.',
     url: BASE_URL,
-    siteName: 'Cernislabs',
+    siteName: 'CernisLabs',
     locale: 'en_ZA',
     type: 'website',
     images: [
@@ -61,13 +61,13 @@ export const metadata: Metadata = {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'Cernislabs — AI & Software Consulting, Johannesburg',
+        alt: 'CernisLabs — AI & Software Consulting, Johannesburg',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cernislabs | AI & Software Consulting — Johannesburg',
+    title: 'AI Consulting Johannesburg | CernisLabs',
     description:
       'Fixed-fee AI and software projects for South African businesses. Senior partners. Results within 90 days.',
     images: ['/opengraph-image'],
@@ -83,16 +83,63 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  authors: [{ name: 'Cernislabs', url: BASE_URL }],
-  creator: 'Cernislabs',
-  publisher: 'Cernislabs',
+  authors: [{ name: 'CernisLabs', url: BASE_URL }],
+  creator: 'CernisLabs',
+  publisher: 'CernisLabs',
   category: 'Technology',
+}
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How much does AI consulting cost in South Africa?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'CernisLabs offers fixed-fee AI consulting packages for South African businesses. Unlike hourly billing, you know the exact cost upfront. Discovery calls are completely free. Most engagements start with a cost reduction audit and deliver measurable results within 90 days.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What AI consulting services does CernisLabs offer in Johannesburg?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'CernisLabs offers four core services from our Johannesburg base: Cost Reduction Advisory (AI and automation audits), Data Analytics & Engineering (warehouses, pipelines, dashboards), Full-Stack Development & Cloud DevOps (web platforms, internal tools, AI-powered apps), and Digital Marketing & SEO (AI-assisted content, search strategy, conversion optimisation).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How quickly can CernisLabs deliver results?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Most CernisLabs clients see measurable outcomes within 90 days of starting. We begin with a free discovery call, followed by a clear proposal with fixed fees and defined deliverables — no open-ended billing.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Does CernisLabs work with small businesses in South Africa?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. CernisLabs works with businesses across South Africa and the African continent — from SMEs to large enterprises in financial services, retail, healthcare, agribusiness, and logistics. Our fixed-fee model makes senior-level AI expertise accessible without enterprise budgets.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is CernisLabs based in Johannesburg?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. CernisLabs is headquartered in Johannesburg, Gauteng. We primarily serve clients in Johannesburg, Pretoria, Cape Town, Durban, and across South Africa, with remote capability for clients anywhere in Africa.',
+      },
+    },
+  ],
 }
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
-  name: 'Cernislabs',
+  name: 'CernisLabs',
   url: BASE_URL,
   logo: `${BASE_URL}/opengraph-image`,
   email: 'hello@cernislabs.com',
@@ -147,6 +194,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       </head>
       <body className="font-sans">{children}</body>
