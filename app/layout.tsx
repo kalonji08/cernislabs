@@ -1,10 +1,17 @@
 import type { Metadata } from 'next'
-import { Outfit, DM_Mono } from 'next/font/google'
+import { Inter, Plus_Jakarta_Sans, DM_Mono } from 'next/font/google'
 import './globals.css'
 
-const outfit = Outfit({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-outfit',
+  variable: '--font-inter',
+  display: 'swap',
+})
+
+// Aeonik Pro substitute — swap for self-hosted Aeonik Pro woff2 files if available
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-jakarta',
   display: 'swap',
   weight: ['300', '400', '500', '600', '700', '800'],
 })
@@ -135,7 +142,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en-ZA" className={`${outfit.variable} ${dmMono.variable}`}>
+    <html lang="en-ZA" className={`${inter.variable} ${jakarta.variable} ${dmMono.variable}`}>
       <head>
         <script
           type="application/ld+json"
