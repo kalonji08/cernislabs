@@ -15,13 +15,20 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const { scrollY } = useScroll()
 
-  useEffect(() => scrollY.on('change', (v) => setScrolled(v > 40)), [scrollY])
+  useEffect(() => scrollY.on('change', (v) => setScrolled(v > 60)), [scrollY])
+
+  /* Two visual states:
+     – over hero   (scrolled=false): white text, fully transparent bg
+     – past hero   (scrolled=true):  dark text, frosted white bg + border   */
+  const isLight = scrolled
 
   return (
     <>
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? 'bg-white/95 backdrop-blur-md border-b border-brand-border shadow-sm' : 'bg-transparent'
+          isLight
+            ? 'bg-white/95 backdrop-blur-md border-b border-brand-border shadow-sm'
+            : 'bg-transparent border-b border-transparent'
         }`}
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -29,12 +36,18 @@ export default function Nav() {
       >
         <nav className="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
 
-          {/* Logo — full brand name */}
+          {/* Logo */}
           <a href="/" className="flex items-center gap-2.5 group">
-            <span className="w-7 h-7 rounded-full bg-brand flex items-center justify-center">
-              <span className="w-2 h-2 rounded-full bg-brand-muted" />
+            <span className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-300 ${
+              isLight ? 'bg-brand' : 'bg-white'
+            }`}>
+              <span className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                isLight ? 'bg-white' : 'bg-brand'
+              }`} />
             </span>
-            <span className="font-heading text-base font-bold tracking-tight text-brand">
+            <span className={`font-heading text-base font-bold tracking-tight transition-colors duration-300 ${
+              isLight ? 'text-brand' : 'text-white'
+            }`}>
               CernisLabs
             </span>
           </a>
@@ -45,7 +58,11 @@ export default function Nav() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm text-brand-secondary hover:text-brand transition-colors duration-150 font-medium"
+                className={`text-sm font-medium transition-colors duration-300 ${
+                  isLight
+                    ? 'text-brand-secondary hover:text-brand'
+                    : 'text-white/70 hover:text-white'
+                }`}
               >
                 {link.label}
               </a>
@@ -56,7 +73,11 @@ export default function Nav() {
           <div className="hidden md:flex items-center gap-3">
             <a
               href="#contact-form"
-              className="text-sm font-semibold px-5 py-2.5 rounded-full bg-brand text-white hover:bg-brand-secondary transition-all duration-200 active:scale-[0.98]"
+              className={`text-sm font-semibold px-5 py-2.5 rounded-full transition-all duration-300 active:scale-[0.98] ${
+                isLight
+                  ? 'bg-brand text-white hover:bg-brand-secondary'
+                  : 'bg-white text-brand hover:bg-brand-light border border-white/20'
+              }`}
             >
               Book discovery call
             </a>
@@ -64,7 +85,9 @@ export default function Nav() {
 
           {/* Mobile toggle */}
           <button
-            className="md:hidden text-brand-secondary hover:text-brand transition-colors"
+            className={`md:hidden transition-colors duration-300 ${
+              isLight ? 'text-brand-secondary hover:text-brand' : 'text-white/70 hover:text-white'
+            }`}
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
           >
