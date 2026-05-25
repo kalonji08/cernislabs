@@ -89,6 +89,56 @@ export const metadata: Metadata = {
   category: 'Technology',
 }
 
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'CernisLabs',
+  url: BASE_URL,
+  description: 'AI consulting, data engineering, full-stack development and digital marketing for South African businesses.',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${BASE_URL}/?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+}
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: BASE_URL,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Services',
+      item: `${BASE_URL}/#services`,
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: 'Why CernisLabs',
+      item: `${BASE_URL}/#why-us`,
+    },
+    {
+      '@type': 'ListItem',
+      position: 4,
+      name: 'Our Process',
+      item: `${BASE_URL}/#process`,
+    },
+    {
+      '@type': 'ListItem',
+      position: 5,
+      name: 'Contact',
+      item: `${BASE_URL}/#contact-form`,
+    },
+  ],
+}
+
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -191,14 +241,10 @@ export default function RootLayout({
   return (
     <html lang="en-ZA" className={`${inter.variable} ${jakarta.variable} ${dmMono.variable}`}>
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body className="font-sans">{children}</body>
     </html>
