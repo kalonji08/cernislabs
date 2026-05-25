@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useTransform, animate, useInView, useScroll } from 'framer-motion'
-import { ArrowRight, MapPin, EnvelopeSimple } from '@phosphor-icons/react'
+import { ArrowRight, MapPin } from '@phosphor-icons/react'
 import Image from 'next/image'
 
 const PHRASES = [
@@ -34,7 +34,7 @@ function TypewriterCycle() {
   }, [displayed, deleting, index])
 
   return (
-    <span className="font-mono text-xs tracking-widest text-brand-muted uppercase">
+    <span className="font-mono text-xs tracking-widest text-white/70 uppercase">
       {displayed}<span className="animate-pulse ml-0.5">|</span>
     </span>
   )
@@ -73,168 +73,186 @@ function MaskReveal({ text, className, delay = 0 }: { text: string; className?: 
   )
 }
 
-/* ── Parallax image wrapper ── */
-function ParallaxImage({ src, alt }: { src: string; alt: string }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
-  const y = useTransform(scrollYProgress, [0, 1], ['-8%', '8%'])
+export default function Hero() {
+  const sectionRef = useRef<HTMLElement>(null)
+
+  /* Parallax: image scrolls at 30% of page scroll speed */
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
+
+  /* Content fades + lifts as user scrolls away */
+  const contentY       = useTransform(scrollYProgress, [0, 1], ['0%', '-12%'])
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
 
   return (
-    <div ref={ref} className="relative w-full h-full overflow-hidden rounded-[24px]">
-      <motion.div className="absolute inset-[-12%]" style={{ y }}>
+    <section
+      ref={sectionRef}
+      className="relative min-h-[100dvh] w-full overflow-hidden flex items-center"
+    >
+      {/* ── Full-bleed parallax background image ── */}
+      <motion.div
+        className="absolute inset-0 w-full h-full"
+        style={{ y: imageY, scale: 1.15 }}
+      >
         <Image
-          src={src}
-          alt={alt}
+          src="/images/pexels-sonny-8581531.jpg"
+          alt="CernisLabs — AI consulting in action"
           fill
-          className="object-cover"
-          sizes="(max-width: 1024px) 100vw, 45vw"
+          className="object-cover object-center"
+          sizes="100vw"
           priority
         />
       </motion.div>
-    </div>
-  )
-}
 
-export default function Hero() {
-  const heroRef = useRef<HTMLDivElement>(null)
-  const mouseX  = useMotionValue(0)
-  const mouseY  = useMotionValue(0)
-  const cardRotateX = useTransform(mouseY, [-300, 300], [2, -2])
-  const cardRotateY = useTransform(mouseX, [-400, 400], [-4, 4])
-
-  useEffect(() => {
-    const el = heroRef.current
-    if (!el) return
-    const onMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect()
-      mouseX.set(e.clientX - rect.left - rect.width / 2)
-      mouseY.set(e.clientY - rect.top - rect.height / 2)
-    }
-    el.addEventListener('mousemove', onMove)
-    return () => el.removeEventListener('mousemove', onMove)
-  }, [mouseX, mouseY])
-
-  return (
-    <section ref={heroRef} className="relative min-h-[100dvh] bg-white flex items-center overflow-hidden">
-      {/* Subtle dot grid */}
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ backgroundImage: 'radial-gradient(circle, #E8EAEC 1px, transparent 1px)', backgroundSize: '32px 32px' }}
+      {/* ── Layered overlays for depth + readability ── */}
+      {/* Dark base */}
+      <div className="absolute inset-0 bg-brand/70" />
+      {/* Vignette from top */}
+      <div className="absolute inset-0 bg-gradient-to-b from-brand/60 via-transparent to-brand/80" />
+      {/* Subtle left-side brightness for text area */}
+      <div className="absolute inset-0 bg-gradient-to-r from-brand/40 via-transparent to-transparent" />
+      {/* Dot grid texture */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.07]"
+        style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '32px 32px' }}
       />
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 pt-24 pb-12 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[85vh]">
+      {/* ── Content ── */}
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-10 pt-32 pb-20"
+      >
+        {/* Location badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="inline-flex items-center gap-2 mb-10 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm"
+        >
+          <MapPin size={12} weight="fill" className="text-white/60" />
+          <span className="text-xs font-medium text-white/80 tracking-wide">Johannesburg, South Africa</span>
+        </motion.div>
 
-          {/* ── Left ── */}
-          <div>
+        {/* Headline */}
+        <div
+          className="font-heading font-bold tracking-tight leading-[0.9] text-white mb-8"
+          style={{ fontSize: 'clamp(3rem, 8vw, 8rem)' }}
+        >
+          <MaskReveal text="AI that actually" delay={0.15} />
+          <MaskReveal text="moves the needle." delay={0.35} className="text-white/50" />
+        </div>
+
+        {/* Sub-copy */}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.75 }}
+          className="text-base md:text-xl text-white/70 leading-relaxed max-w-[52ch] mb-10"
+        >
+          Strategy, software, data, and growth — under one roof — for South African
+          and African businesses ready to do something serious with AI.
+        </motion.p>
+
+        {/* CTAs */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.9 }}
+          className="flex flex-wrap gap-3 mb-16"
+        >
+          <a
+            href="#contact-form"
+            className="group inline-flex items-center gap-2 px-7 py-4 rounded-full bg-white text-brand text-sm font-semibold hover:bg-brand-light transition-all duration-200 active:scale-[0.97]"
+          >
+            Book discovery call
+            <ArrowRight size={15} weight="bold" className="group-hover:translate-x-1 transition-transform duration-200" />
+          </a>
+          <a
+            href="#services"
+            className="inline-flex items-center gap-2 px-7 py-4 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm text-white text-sm font-semibold hover:bg-white/20 transition-all duration-200 active:scale-[0.97]"
+          >
+            See our services
+          </a>
+        </motion.div>
+
+        {/* Typewriter strip */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.1 }}
+          className="mb-16"
+        >
+          <TypewriterCycle />
+        </motion.div>
+
+        {/* Stats row */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 1.0 }}
+          className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl"
+        >
+          {[
+            { to: 90,  unit: 'days',     label: 'to first savings', delay: 0.6 },
+            { to: 4,   unit: 'services', label: 'one partner',      delay: 0.7 },
+            { to: 0,   unit: 'charge',   label: 'for discovery',    delay: 0.8 },
+            { to: 1,   unit: 'contact',  label: 'for everything',   delay: 0.9 },
+          ].map((m) => (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="inline-flex items-center gap-2 mb-10 px-3.5 py-1.5 rounded-full border border-brand-border bg-brand-light"
-            >
-              <MapPin size={12} weight="fill" className="text-brand-muted" />
-              <span className="text-xs font-medium text-brand-secondary tracking-wide">Johannesburg, South Africa</span>
-            </motion.div>
-
-            {/* Massive headline */}
-            <div className="font-heading font-bold tracking-tight leading-[0.9] text-brand mb-6"
-              style={{ fontSize: 'clamp(3rem, 7vw, 7rem)' }}>
-              <MaskReveal text="AI that actually" delay={0.15} />
-              <MaskReveal text="moves the needle." delay={0.35} className="text-brand-muted" />
-            </div>
-
-            <motion.p
+              key={m.label}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.75 }}
-              className="text-base md:text-lg text-brand-secondary leading-relaxed max-w-[48ch] mb-10"
+              transition={{ type: 'spring', stiffness: 100, damping: 18, delay: m.delay }}
+              className="rounded-2xl bg-white/10 backdrop-blur-sm border border-white/15 p-4 text-center"
             >
-              Strategy, software, data, and growth — under one roof — for South African and African businesses ready to do something serious with AI.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.9 }}
-              className="flex flex-wrap gap-3 mb-12"
-            >
-              <a href="#contact-form" className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-brand text-white text-sm font-semibold hover:bg-brand-secondary transition-all duration-200 active:scale-[0.97]">
-                Book discovery call
-                <ArrowRight size={15} weight="bold" className="group-hover:translate-x-1 transition-transform duration-200" />
-              </a>
-              <a href="#services" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-brand-light text-brand text-sm font-semibold hover:bg-brand-border transition-all duration-200 active:scale-[0.97]">
-                See our services
-              </a>
+              <div className="font-heading text-2xl font-bold text-white tracking-tight">
+                <Counter to={m.to} delay={m.delay} />
+                <span className="text-sm text-white/60 ml-0.5">{m.unit}</span>
+              </div>
+              <p className="text-[11px] text-white/50 mt-0.5 leading-tight">{m.label}</p>
             </motion.div>
+          ))}
+        </motion.div>
 
-            <motion.div
+        {/* Sectors */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.3 }}
+          className="mt-16 pt-8 border-t border-white/15 flex flex-wrap gap-6"
+        >
+          {['Financial services', 'Retail', 'Healthcare', 'Agribusiness', 'Logistics'].map((s, i) => (
+            <motion.span
+              key={s}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.1 }}
-              className="pt-8 border-t border-brand-border flex flex-wrap gap-6"
+              transition={{ delay: 1.35 + i * 0.06 }}
+              className="text-xs text-white/40 tracking-wide font-medium"
             >
-              {['Financial services', 'Retail', 'Healthcare', 'Agribusiness', 'Logistics'].map((s, i) => (
-                <motion.span key={s} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.15 + i * 0.06 }}
-                  className="text-xs text-brand-muted tracking-wide font-medium">{s}</motion.span>
-              ))}
-            </motion.div>
-          </div>
+              {s}
+            </motion.span>
+          ))}
+        </motion.div>
+      </motion.div>
 
-          {/* ── Right — hero image + stats card ── */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ type: 'spring', stiffness: 70, damping: 18, delay: 0.4 }}
-            className="hidden lg:flex flex-col gap-4 h-[620px]"
-          >
-            {/* Main image — parallax */}
-            <div className="relative flex-1 rounded-[24px] overflow-hidden shadow-2xl"
-              style={{ boxShadow: '0 40px 80px -20px rgba(25,28,31,0.18)' }}>
-              <ParallaxImage
-                src="/images/pexels-sonny-8581531.jpg"
-                alt="CernisLabs — AI consulting in action"
-              />
-              {/* Overlay gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-brand/60 via-transparent to-transparent" />
-              {/* Typewriter overlay */}
-              <div className="absolute bottom-5 left-5 right-5">
-                <div className="bg-white/90 backdrop-blur-sm rounded-[14px] px-4 py-3">
-                  <TypewriterCycle />
-                </div>
-              </div>
-            </div>
-
-            {/* Stats row */}
-            <motion.div
-              style={{ rotateX: cardRotateX, rotateY: cardRotateY }}
-              className="grid grid-cols-4 gap-2"
-            >
-              {[
-                { to: 90,  unit: 'days',    label: 'to first savings', delay: 0.6 },
-                { to: 4,   unit: 'services', label: 'one partner',     delay: 0.7 },
-                { to: 0,   unit: 'charge',  label: 'for discovery',    delay: 0.8 },
-                { to: 1,   unit: 'contact', label: 'for everything',   delay: 0.9 },
-              ].map((m) => (
-                <motion.div
-                  key={m.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ type: 'spring', stiffness: 100, damping: 18, delay: m.delay }}
-                  className="rounded-[16px] bg-brand-light border border-brand-border p-3.5 text-center"
-                >
-                  <div className="font-heading text-xl font-bold text-brand tracking-tight">
-                    <Counter to={m.to} delay={m.delay} />
-                    <span className="text-xs text-brand-secondary ml-0.5">{m.unit}</span>
-                  </div>
-                  <p className="text-[10px] text-brand-muted mt-0.5 leading-tight">{m.label}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>
-
-        </div>
-      </div>
+      {/* Scroll hint */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.8 }}
+        style={{ opacity: useTransform(scrollYProgress, [0, 0.15], [1, 0]) }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+      >
+        <span className="text-[10px] tracking-[0.2em] text-white/40 uppercase">Scroll</span>
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+          className="w-px h-10 bg-gradient-to-b from-white/40 to-transparent"
+        />
+      </motion.div>
     </section>
   )
 }
