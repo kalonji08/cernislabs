@@ -136,14 +136,14 @@ export default function Hero() {
           <span className="text-xs font-medium text-white/80 tracking-wide">Johannesburg, South Africa</span>
         </motion.div>
 
-        {/* Headline */}
-        <div
+        {/* Headline — H1 for SEO */}
+        <h1
           className="font-heading font-bold tracking-tight leading-[0.9] text-white mb-8"
           style={{ fontSize: 'clamp(3rem, 8vw, 8rem)' }}
         >
           <MaskReveal text="AI that actually" delay={0.15} />
           <MaskReveal text="moves the needle." delay={0.35} className="text-white/50" />
-        </div>
+        </h1>
 
         {/* Sub-copy */}
         <motion.p
